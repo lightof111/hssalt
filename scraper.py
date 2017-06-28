@@ -1,30 +1,10 @@
 from lxml import html
-import requests
 from bs4 import BeautifulSoup
+
+import requests
 import unicodedata
 import json
 
-
-# page = requests.get('http://www.hearthpwn.com/forums/hearthstone-general/general-discussion/28947-group-therapy-need-to-blow-off-steam-mega-salty?page=1850')
-# tree = html.fromstring(page.content)
-# comments = tree.xpath('//li[@itemtype="http://schema.org/Comment"]')
-
-# a = 3
-# for com in comments:
-# 	lst1 = com.xpath('./div[@id="forum-post-body-38783"]')
-# 	print(lst1)
-
-# 	# if (len(lst1) != 0):
-# 	# 	a = lst1
-# 	# 	break
-
-# b = lst1[0].xpath('./p')
-
-# for e in b:
-# 	print(e.text)
-
-
-# url = raw_input('http://www.hearthpwn.com/forums/hearthstone-general/general-discussion/28947-group-therapy-need-to-blow-off-steam-mega-salty?page=1850')
 
 class Comment:
     def __init__(self, comment, commentId, commentDate):
@@ -75,11 +55,12 @@ def scrape(i):
 		commentDate = elem.find_all('abbr', class_="tip standard-date standard-datetime")[0].get("data-epoch")
 		comments.append(Comment(comment, commentNumber, commentDate))
 
-	# for comment in comments:
-	# 	print((comment.comment))
-	# 	print('\n')
-
 	return comments
+
+def printComments(comments):
+	for comment in comments:
+		print((comment.comment))
+		print('\n')
 
 def analyze(comments):
 	words = {}
@@ -98,14 +79,14 @@ def sortComments(comments):
 	tup.reverse()
 	return tup
 
-def download():
-	for i in range(1000, 1800):
+def download(a, b):
+	for i in range(a, b):
 		comments = scrape(i)
 		saveToFile("comments/" + str(i) + ".json", comments)
 
-def reload():
+def reload(a, b):
 	totalComments = []
-	for i in range(1800, 1850):
+	for i in range(a, b):
 		comments = loadFromFile("comments/" + str(i) + ".json")
 		totalComments.extend(comments)
 	return totalComments
